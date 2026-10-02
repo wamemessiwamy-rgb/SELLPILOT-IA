@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SellPilot AI - Turn More Conversations Into Customers</title>
+  <!-- Tailwind CSS & Lucide Icons CDN para execução instantânea -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { background-color: #0A0F1E; color: #F8FAFC; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .nav-active { background-color: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); color: #60A5FA; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0A0F1E; }
+    ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 4px; }
+  </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden select-none">
+
+  <!-- ==================== DESKTOP SIDEBAR ==================== -->
+  <aside class="hidden md:flex flex-col w-64 bg-[#111827] border-r border-slate-800 p-4 justify-between h-full">
+    <div>
+      <!-- Brand Header -->
+      <div class="flex items-center space-x-3 px-2 py-3 border-b border-slate-800">
+        <div class="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/30">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </div>
+        <div>
+          <h1 class="text-white font-bold text-base tracking-tight leading-none">SellPilot AI</h1>
+          <span class="text-[11px] text-slate-400">Sales Intelligence</span>
+        </div>
+      </div>
+
+      <!-- Quick Action: Close the Sale -->
+      <button onclick="switchTab('close-the-sale')" class="w-full mt-4 py-2.5 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs flex items-center justify-center space-x-2 shadow-md shadow-blue-500/20 transition-all">
+        <span>🔥</span>
+        <span>Close the Sale</span>
+      </button>
+
+      <!-- Navigation Links -->
+      <nav class="mt-4 space-y-1 text-xs">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 nav-active transition">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 text-blue-400"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="switchTab('ai')" id="nav-ai" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          <span>AI Reply</span>
+        </button>
+        <button onclick="switchTab('close-the-sale')" id="nav-close-the-sale" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="flame" class="w-4 h-4 text-amber-500"></i>
+          <span>Close the Sale</span>
+        </button>
+        <button onclick="switchTab('leads')" id="nav-leads" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Leads Pipeline</span>
+        </button>
+        <button onclick="switchTab('customers')" id="nav-customers" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          <span>Customer CRM</span>
+        </button>
+        <button onclick="switchTab('follow-ups')" id="nav-follow-ups" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="clock" class="w-4 h-4"></i>
+          <span>Follow-Ups</span>
+        </button>
+        <button onclick="switchTab('products')" id="nav-products" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="package" class="w-4 h-4"></i>
+          <span>Products</span>
+        </button>
+        <button onclick="switchTab('ad-creator')" id="nav-ad-creator" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="megaphone" class="w-4 h-4"></i>
+          <span>AI Ad Creator</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="nav-analytics" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+          <span>Analytics</span>
+        </button>
+        <button onclick="switchTab('settings')" id="nav-settings" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/60 transition">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+          <span>Settings & Plans</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- User Profile Strip -->
+    <div class="pt-3 border-t border-slate-800">
+      <div class="flex items-center justify-between p-2 rounded-xl bg-[#0A0F1E] border border-slate-800 mb-2">
+        <div class="flex items-center space-x-2.5 overflow-hidden">
+          <div class="w-7 h-7 rounded-full bg-blue-900 border border-blue-500/40 flex items-center justify-center text-blue-300 text-xs font-bold">S</div>
+          <div class="truncate">
+            <p class="text-white text-xs font-semibold leading-tight truncate">Sarah Jenkins</p>
+            <p class="text-slate-400 text-[10px] leading-tight truncate">sarah@company.com</p>
+          </div>
+        </div>
+        <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-600/20 text-blue-400 border border-blue-500/40">PRO</span>
+      </div>
+      <button onclick="alert('Session signed out successfully.')" class="w-full py-1.5 rounded-lg text-slate-400 hover:text-rose-400 text-xs flex items-center justify-center space-x-1.5 transition">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 flex flex-col h-full overflow-hidden bg-[#0A0F1E]">
+
+    <!-- Mobile Top Header -->
+    <header class="flex md:hidden items-center justify-between px-4 py-3 bg-[#111827] border-b border-slate-800">
+      <div class="flex items-center space-x-2">
+        <div class="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center text-white">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+        </div>
+        <h1 class="text-white font-bold text-sm tracking-tight">SellPilot AI</h1>
+      </div>
+      <button onclick="switchTab('settings')" class="w-7 h-7 rounded-full bg-blue-950 border border-blue-500/50 flex items-center justify-center text-blue-300 text-xs font-bold">S</button>
+    </header>
+
+    <!-- Scrollable Screens Container -->
+    <div id="content-container" class="flex-1 overflow-y-auto p-4 md:p-8">
+
+      <!-- 1. DASHBOARD VIEW -->
+      <section id="view-dashboard" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-800 gap-3">
+          <div>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Sales Dashboard</h2>
+            <p class="text-slate-400 text-xs mt-0.5">Real-time performance metrics and sales intelligence</p>
+          </div>
+          <!-- Time Filters -->
+          <div class="flex items-center bg-[#111827] p-1 rounded-xl border border-slate-800 text-xs">
+            <button onclick="changeTimeframe('Today')" id="tf-Today" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">Today</button>
+            <button onclick="changeTimeframe('7 Days')" id="tf-7 Days" class="px-3 py-1 rounded-lg bg-blue-600 text-white font-bold transition">7 Days</button>
+            <button onclick="changeTimeframe('30 Days')" id="tf-30 Days" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">30 Days</button>
+          </div>
+        </div>
+
+        <!-- 6 Metrics Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3">
+          <div class="p-4 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Revenue</p>
+            <p id="kpi-revenue" class="text-2xl font-bold text-white mt-1">$9,480.00</p>
+            <p class="text-emerald-400 text-[11px] mt-1 font-semibold">↑ 18.4% vs last week</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Orders</p>
+            <p id="kpi-orders" class="text-2xl font-bold text-white mt-1">31</p>
+            <p class="text-blue-400 text-[11px] mt-1 font-semibold">Fulfilled checkouts</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">New Leads</p>
+            <p id="kpi-leads" class="text-2xl font-bold text-white mt-1">64</p>
+            <p class="text-emerald-400 text-[11px] mt-1 font-semibold">↑ 15.2% inbound</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Conversion</p>
+            <p id="kpi-conversion" class="text-2xl font-bold text-white mt-1">24.8%</p>
+            <p class="text-slate-400 text-[11px] mt-1 font-semibold">Lead to client</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Follow-Ups Due</p>
+            <p class="text-2xl font-bold text-amber-400 mt-1">5</p>
+            <p class="text-amber-400/80 text-[11px] mt-1 font-semibold">Action needed</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 text-[10px] uppercase font-bold tracking-wider">Unanswered</p>
+            <p class="text-2xl font-bold text-rose-400 mt-1">3</p>
+            <p class="text-rose-400/80 text-[11px] mt-1 font-semibold">&gt; 15 mins wait</p>
+          </div>
+        </div>
+
+        <!-- Sales Opportunities Feed -->
+        <div class="rounded-2xl bg-[#111827] border border-slate-800 p-5">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <div>
+              <h3 class="text-white font-bold text-sm">Active Sales Opportunities</h3>
+              <p class="text-slate-400 text-xs">High-intent buyer conversations ready for immediate closing</p>
+            </div>
+            <button onclick="switchTab('leads')" class="text-blue-400 text-xs hover:underline flex items-center space-x-1">
+              <span>View All</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <div class="divide-y divide-slate-800/80 mt-2">
+            <!-- Opportunity 1 -->
+            <div class="py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-white font-bold text-xs">Marcus Vance</span>
+                  <span class="text-slate-500">•</span>
+                  <span class="text-slate-300 text-xs">Enterprise Sales Suite</span>
+                  <span class="text-emerald-400 font-mono text-xs font-bold">$2,400.00</span>
+                </div>
+                <p class="text-slate-400 text-xs italic mt-1 font-serif">"Can we finalize the schedule? Reviewing with CFO today."</p>
+              </div>
+              <button onclick="loadCloseSalePreload('Marcus Vance', 'Enterprise Sales Suite', 'Can we finalize the schedule? Reviewing with CFO today.', '2400')" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm shadow-blue-500/20 self-start md:self-auto transition">
+                <span>🔥</span>
+                <span>Close a Sale</span>
+              </button>
+            </div>
+            <!-- Opportunity 2 -->
+            <div class="py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="flex items-center space-x-2">
+                  <span class="text-white font-bold text-xs">Elena Rostova</span>
+                  <span class="text-slate-500">•</span>
+                  <span class="text-slate-300 text-xs">Professional Retainer</span>
+                  <span class="text-emerald-400 font-mono text-xs font-bold">$1,200.00</span>
+                </div>
+                <p class="text-slate-400 text-xs italic mt-1 font-serif">"The cost is slightly higher than our current budget allocation."</p>
+              </div>
+              <button onclick="loadCloseSalePreload('Elena Rostova', 'Professional Retainer', 'The cost is slightly higher than our current budget allocation for this quarter.', '1200')" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center space-x-1.5 shadow-sm shadow-blue-500/20 self-start md:self-auto transition">
+                <span>🔥</span>
+                <span>Close a Sale</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. AI REPLY ASSISTANT VIEW -->
+      <section id="view-ai" class="hidden space-y-6">
+        <div class="pb-4 border-b border-slate-800">
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">AI Reply Assistant</h2>
+          <p class="text-slate-400 text-xs mt-0.5">Draft natural American English responses protected by anti-hallucination guardrails</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Customer Inquiry</label>
+              <textarea id="ai-input" rows="4" class="w-full p-3.5 rounded-2xl bg-[#111827] border border-slate-800 text-white text-xs leading-relaxed focus:border-blue-500 focus:outline-none" placeholder="Paste customer DM, SMS or email question here..."></textarea>
+            </div>
+
+            <!-- Style Selector -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Response Tone</label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <button onclick="setAiTone('Friendly')" id="tone-Friendly" class="p-2.5 rounded-xl border bg-blue-600/20 border-blue-500 text-blue-300 font-bold transition">Friendly</button>
+                <button onclick="setAiTone('Professional')" id="tone-Professional" class="p-2.5 rounded-xl border bg-[#111827] border-slate-800 text-slate-400 transition">Professional</button>
+                <button onclick="setAiTone('Persuasive')" id="tone-Persuasive" class="p-2.5 rounded-xl border bg-[#111827] border-slate-800 text-slate-400 transition">Persuasive</button>
+                <button onclick="setAiTone('Short')" id="tone-Short" class="p-2.5 rounded-xl border bg-[#111827] border-slate-800 text-slate-400 transition">Short</button>
+              </div>
+            </div>
+
+            <!-- Guardrails Context -->
+            <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-[11px] text-slate-400 flex items-center space-x-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+              <span>Anti-Hallucination Active: AI will not invent unauthorized pricing, shipping or warranties.</span>
+            </div>
+
+            <button onclick="generateAIReply()" class="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/20 transition">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Generate Reply</span>
+            </button>
+
+            <!-- Output Box -->
+            <div id="ai-output-card" class="hidden p-5 rounded-2xl bg-[#111827] border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between pb-2 border-b border-slate-800 text-xs">
+                <span class="text-white font-bold uppercase tracking-wider flex items-center space-x-1.5">
+                  <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                  <span>Generated Sales Response</span>
+                </span>
+                <span class="text-slate-500 font-mono text-[10px]">Natural American English</span>
+              </div>
+              <p id="ai-output-text" class="text-slate-100 text-xs leading-relaxed"></p>
+              <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
+                <button onclick="copyText('ai-output-text')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-semibold hover:bg-slate-800 flex items-center space-x-1.5">
+                  <i data-lucide="copy" class="w-3.5 h-3.5 text-blue-400"></i>
+                  <span id="copy-btn-label">Copy to Clipboard</span>
+                </button>
+                <button onclick="saveTemplate()" class="px-3 py-1.5 rounded-lg bg-blue-600/20 border border-blue-500/40 text-blue-300 font-semibold hover:bg-blue-600/30">
+                  Save to Templates
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Test Presets -->
+          <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800 h-fit space-y-3">
+            <h3 class="text-white font-bold text-xs uppercase tracking-wider">Test Sample Inquiries</h3>
+            <div class="space-y-2 text-xs">
+              <button onclick="insertSample('Is this product currently in stock and when can you ship?')" class="w-full text-left p-2.5 rounded-xl bg-[#0A0F1E] border border-slate-800 text-slate-300 hover:border-blue-500 transition">
+                "Is this product currently in stock and when can you ship?"
+              </button>
+              <button onclick="insertSample('Can you offer any discount if I order 3 units today?')" class="w-full text-left p-2.5 rounded-xl bg-[#0A0F1E] border border-slate-800 text-slate-300 hover:border-blue-500 transition">
+                "Can you offer any discount if I order 3 units today?"
+              </button>
+              <button onclick="insertSample('What kind of warranty or return policy do you provide?')" class="w-full text-left p-2.5 rounded-xl bg-[#0A0F1E] border border-slate-800 text-slate-300 hover:border-blue-500 transition">
+                "What kind of warranty or return policy do you provide?"
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. CLOSE THE SALE (SIGNATURE ENGINE) -->
+      <section id="view-close-the-sale" class="hidden space-y-6">
+        <div class="pb-4 border-b border-slate-800">
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">🔥</span>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Close the Sale</h2>
+          </div>
+          <p class="text-slate-400 text-xs mt-0.5">Analyze customer conversation threads, evaluate purchase intent, and formulate targeted closings</p>
+        </div>
+
+        <div class="space-y-4 max-w-4xl">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <input id="cts-client" placeholder="Customer Name (e.g. Marcus Vance)" class="p-3 bg-[#111827] border border-slate-800 rounded-xl text-white focus:outline-none" />
+            <input id="cts-prod" placeholder="Product Inquired (e.g. Enterprise Suite)" class="p-3 bg-[#111827] border border-slate-800 rounded-xl text-white focus:outline-none" />
+            <input id="cts-val" placeholder="Deal Value USD ($)" class="p-3 bg-[#111827] border border-slate-800 rounded-xl text-white focus:outline-none" />
+          </div>
+
+          <textarea id="cts-input" rows="4" class="w-full p-4 rounded-2xl bg-[#111827] border border-slate-800 text-white text-xs leading-relaxed focus:border-blue-500 focus:outline-none" placeholder="Paste full conversation thread here..."></textarea>
+
+          <button onclick="runCloseTheSale()" class="w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/20 transition">
+            <span>🔥</span>
+            <span>Analyze & Close the Sale</span>
+          </button>
+
+          <!-- Audit Results Output -->
+          <div id="cts-output" class="hidden space-y-4">
+            <!-- Intent Card -->
+            <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800 space-y-3">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-800 gap-2">
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Customer Buying Intent</span>
+                  <div class="flex items-center space-x-2 mt-1">
+                    <span id="cts-badge" class="px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-emerald-950 border border-emerald-600 text-emerald-400">High Intent</span>
+                    <span class="text-slate-400 text-xs">Buyer signaling active decision phase</span>
+                  </div>
+                </div>
+                <div>
+                  <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Main Objection</span>
+                  <p id="cts-objection" class="text-rose-400 text-xs font-semibold mt-1">Budget pacing / upfront cost allocation</p>
+                </div>
+              </div>
+              <div class="p-3 rounded-xl bg-blue-950/30 border border-blue-800/60 text-xs">
+                <span class="text-blue-300 font-bold uppercase tracking-wider text-[10px]">Recommended Action</span>
+                <p id="cts-rec" class="text-slate-200 mt-1">Focus on week-one ROI and offer flexible milestone payments to eliminate cash flow friction.</p>
+              </div>
+            </div>
+
+            <!-- Tri-Angle Closing Card -->
+            <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800 space-y-4">
+              <div class="grid grid-cols-3 gap-2">
+                <button onclick="switchAngle('VALUE')" id="angle-VALUE" class="p-2.5 rounded-xl border bg-blue-600/20 border-blue-500 text-blue-300 font-bold text-xs">VALUE</button>
+                <button onclick="switchAngle('PERSUASIVE')" id="angle-PERSUASIVE" class="p-2.5 rounded-xl border bg-[#0A0F1E] border-slate-800 text-slate-400 text-xs">PERSUASIVE</button>
+                <button onclick="switchAngle('FRIENDLY')" id="angle-FRIENDLY" class="p-2.5 rounded-xl border bg-[#0A0F1E] border-slate-800 text-slate-400 text-xs">FRIENDLY</button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-[#0A0F1E] border border-slate-800 text-xs leading-relaxed text-slate-200" id="cts-angle-text"></div>
+
+              <div class="flex items-center justify-between text-xs">
+                <button onclick="copyText('cts-angle-text')" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-slate-200 font-semibold flex items-center space-x-1.5">
+                  <i data-lucide="copy" class="w-3.5 h-3.5 text-blue-400"></i>
+                  <span>Copy Closing</span>
+                </button>
+                <button onclick="switchTab('follow-ups')" class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white font-bold">
+                  Create Follow-Up →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. PRODUCTS & AD CREATOR VIEW -->
+      <section id="view-products" class="hidden space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div>
+            <h2 class="text-2xl font-extrabold text-white tracking-tight">Products & Profit Margin</h2>
+            <p class="text-slate-400 text-xs mt-0.5">Manage catalog inventory, calculate margins, and create ad campaigns</p>
+          </div>
+          <button onclick="switchTab('ad-creator')" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center space-x-1.5 shadow-md shadow-blue-500/20">
+            <i data-lucide="megaphone" class="w-4 h-4"></i>
+            <span>Open Ad Creator</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Product Card 1 -->
+          <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-white font-bold text-sm">Enterprise Sales Suite</h3>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400">SKU-ENT-001</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-emerald-950 text-emerald-400 border border-emerald-800">80% Margin</span>
+            </div>
+            <p class="text-slate-400 text-xs">Conversational intelligence platform for SMB teams.</p>
+            <div class="pt-2 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <span class="text-slate-500 text-[10px] uppercase font-bold">Price / Cost</span>
+                <p class="text-white font-bold mt-0.5">$2,400 <span class="text-slate-500 font-normal">($480)</span></p>
+              </div>
+              <div>
+                <span class="text-slate-500 text-[10px] uppercase font-bold">Gross Profit</span>
+                <p class="text-emerald-400 font-mono font-bold mt-0.5">$34,560.00</p>
+              </div>
+            </div>
+            <button onclick="preloadAd('Enterprise Sales Suite', 2400, 'Conversational sales AI with instant objection handling')" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-blue-300 text-xs font-semibold flex items-center justify-center space-x-1">
+              <i data-lucide="megaphone" class="w-3.5 h-3.5"></i>
+              <span>Create Ad Campaign</span>
+            </button>
+          </div>
+
+          <!-- Product Card 2 -->
+          <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800 space-y-3">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="text-white font-bold text-sm">Professional Retainer</h3>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400">SKU-RET-002</span>
+              </div>
+              <span class="px-2 py-0.5 rounded text-xs font-bold font-mono bg-emerald-950 text-emerald-400 border border-emerald-800">75% Margin</span>
+            </div>
+            <p class="text-slate-400 text-xs">Monthly dedicated conversion optimization advisory.</p>
+            <div class="pt-2 border-t border-slate-800 grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <span class="text-slate-500 text-[10px] uppercase font-bold">Price / Cost</span>
+                <p class="text-white font-bold mt-0.5">$1,200 <span class="text-slate-500 font-normal">($300)</span></p>
+              </div>
+              <div>
+                <span class="text-slate-500 text-[10px] uppercase font-bold">Gross Profit</span>
+                <p class="text-emerald-400 font-mono font-bold mt-0.5">$30,600.00</p>
+              </div>
+            </div>
+            <button onclick="preloadAd('Professional Retainer', 1200, 'Executive sales consultation delivering weekly closed pipeline audits')" class="w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-blue-300 text-xs font-semibold flex items-center justify-center space-x-1">
+              <i data-lucide="megaphone" class="w-3.5 h-3.5"></i>
+              <span>Create Ad Campaign</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. AI AD CREATOR VIEW -->
+      <section id="view-ad-creator" class="hidden space-y-6">
+        <div class="pb-4 border-b border-slate-800">
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">AI Ad Creator</h2>
+          <p class="text-slate-400 text-xs mt-0.5">Generate multi-channel direct response ad copy, visual scenes and captions</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Platform</label>
+              <select id="ad-plat" class="w-full p-3 bg-[#111827] border border-slate-800 rounded-xl text-white text-xs focus:outline-none">
+                <option value="Instagram">Instagram (Visual + Bio CTA)</option>
+                <option value="Facebook">Facebook (Pain-point + Social Proof)</option>
+                <option value="TikTok">TikTok (3-Second Scene Script)</option>
+                <option value="Google Ads">Google Ads (High-intent Headline)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Product Name</label>
+              <input id="ad-name" value="Enterprise Sales Suite" class="w-full p-3 bg-[#111827] border border-slate-800 rounded-xl text-white text-xs focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Target Audience</label>
+              <input id="ad-aud" value="US business owners, sellers & sales reps" class="w-full p-3 bg-[#111827] border border-slate-800 rounded-xl text-white text-xs focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Unique Selling Point (USP)</label>
+              <input id="ad-usp" value="Closes deals 3x faster without fake discounts" class="w-full p-3 bg-[#111827] border border-slate-800 rounded-xl text-white text-xs focus:outline-none" />
+            </div>
+            <button onclick="runAdCreator()" class="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/20">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Generate Ad Campaign</span>
+            </button>
+          </div>
+
+          <div class="lg:col-span-2">
+            <div id="ad-output-card" class="p-5 rounded-2xl bg-[#111827] border border-slate-800 space-y-4">
+              <div>
+                <span class="text-[10px] text-slate-500 uppercase font-bold">01. Headline</span>
+                <p id="ad-head" class="text-white font-bold text-base mt-0.5">Stop Losing Sales in the DM: Meet SellPilot AI</p>
+              </div>
+              <div>
+                <span class="text-[10px] text-slate-500 uppercase font-bold">02. Primary Ad Copy</span>
+                <p id="ad-copy" class="text-slate-200 text-xs leading-relaxed mt-0.5">Tired of prospective customers asking questions and disappearing? SellPilot AI analyzes live objections, buying intent, and crafts the exact response needed to close.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-[#0A0F1E] border border-slate-800">
+                <span class="text-[10px] text-blue-400 uppercase font-bold">03. TikTok Video Script</span>
+                <p id="ad-tiktok" class="text-slate-300 font-mono text-[11px] leading-relaxed mt-1">[0:00 - 0:03] VISUAL: Fast screen capture of customer hesitating on price.<br>AUDIO: "If your leads keep vanishing after asking for the price, watch this."</p>
+              </div>
+              <div class="flex justify-end">
+                <button onclick="alert('Ad campaign saved to library!')" class="px-4 py-2 rounded-xl bg-blue-600 text-white font-bold text-xs">Save Campaign</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. SETTINGS & BILLING VIEW -->
+      <section id="view-settings" class="hidden space-y-6">
+        <div class="pb-4 border-b border-slate-800">
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">Settings & Subscriptions</h2>
+          <p class="text-slate-400 text-xs mt-0.5">Manage subscription tiers, compliance routes, and integrations</p>
+        </div>
+
+        <!-- 7-Day Trial Disclosure Banner -->
+        <div class="p-4 rounded-2xl bg-blue-950/40 border border-blue-800 flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <i data-lucide="shield-check" class="w-6 h-6 text-blue-400"></i>
+            <div>
+              <p class="text-white text-xs font-bold uppercase tracking-wider">7-Day Free Pro Trial Active (5 Days Remaining)</p>
+              <p class="text-slate-300 text-xs">Billed at $19.00/month after trial. Cancel anytime with one click.</p>
+            </div>
+          </div>
+          <button onclick="alert('Billing portal opened.')" class="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold">Manage</button>
+        </div>
+
+        <!-- Plans Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 font-bold">Free</p>
+            <p class="text-2xl font-extrabold text-white mt-1">$0</p>
+            <p class="text-slate-500 mt-2">• 10 AI replies / mo<br>• 5 follow-ups<br>• 3 ad generations</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-[#111827] border-2 border-blue-500 shadow-xl">
+            <span class="text-[10px] bg-blue-600 text-white font-bold px-2 py-0.5 rounded uppercase">Active Plan</span>
+            <p class="text-blue-400 font-bold mt-2">Pro</p>
+            <p class="text-2xl font-extrabold text-white mt-1">$19 <span class="text-xs font-normal text-slate-400">/mo</span></p>
+            <p class="text-slate-300 mt-2">• Unlimited AI replies<br>• Unlimited Follow-ups<br>• Full CRM & Ad Creator</p>
+          </div>
+          <div class="p-5 rounded-2xl bg-[#111827] border border-slate-800">
+            <p class="text-slate-400 font-bold">Business</p>
+            <p class="text-2xl font-extrabold text-white mt-1">$49 <span class="text-xs font-normal text-slate-400">/mo</span></p>
+            <p class="text-slate-500 mt-2">• Everything in Pro<br>• 5 Team Seats<br>• Priority Support</p>
+            <button onclick="alert('Redirecting to checkout...')" class="mt-4 w-full py-2 bg-slate-900 border border-slate-700 text-white font-bold rounded-lg">Upgrade</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Placeholder views for Leads, Customers, Follow-ups, Analytics -->
+      <section id="view-leads" class="hidden space-y-4">
+        <h2 class="text-2xl font-extrabold text-white">Leads Pipeline</h2>
+        <div class="p-8 rounded-2xl bg-[#111827] border border-slate-800 text-center text-slate-400 text-xs">
+          3 active leads in pipeline. Use "🔥 Close the Sale" to analyze conversations.
+        </div>
+      </section>
+      <section id="view-customers" class="hidden space-y-4">
+        <h2 class="text-2xl font-extrabold text-white">Customer CRM</h2>
+        <div class="p-8 rounded-2xl bg-[#111827] border border-slate-800 text-center text-slate-400 text-xs">
+          Customer records synchronized.
+        </div>
+      </section>
+      <section id="view-follow-ups" class="hidden space-y-4">
+        <h2 class="text-2xl font-extrabold text-white">Follow-Up Center</h2>
+        <div class="p-8 rounded-2xl bg-[#111827] border border-slate-800 text-center text-slate-400 text-xs">
+          5 follow-up reminders scheduled for today.
+        </div>
+      </section>
+      <section id="view-analytics" class="hidden space-y-4">
+        <h2 class="text-2xl font-extrabold text-white">Sales Analytics</h2>
+        <div class="p-8 rounded-2xl bg-[#111827] border border-slate-800 text-center text-slate-400 text-xs">
+          Pipeline analytics running on live verified CRM records.
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==================== MOBILE BOTTOM TAB BAR ==================== -->
+    <nav class="md:hidden flex items-center justify-around bg-[#111827] border-t border-slate-800 py-2 px-1 text-[10px]">
+      <button onclick="switchTab('dashboard')" class="flex flex-col items-center text-blue-400">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        <span>Home</span>
+      </button>
+      <button onclick="switchTab('leads')" class="flex flex-col items-center text-slate-400">
+        <i data-lucide="user-check" class="w-5 h-5"></i>
+        <span>Leads</span>
+      </button>
+      <!-- Center Floating Button -->
+      <button onclick="switchTab('close-the-sale')" class="-mt-6 w-12 h-12 rounded-full bg-blue-600 border-4 border-[#0A0F1E] flex items-center justify-center text-white text-lg shadow-lg shadow-blue-500/40">
+        🔥
+      </button>
+      <button onclick="switchTab('ai')" class="flex flex-col items-center text-slate-400">
+        <i data-lucide="message-square" class="w-5 h-5"></i>
+        <span>AI Reply</span>
+      </button>
+      <button onclick="switchTab('settings')" class="flex flex-col items-center text-slate-400">
+        <i data-lucide="menu" class="w-5 h-5"></i>
+        <span>More</span>
+      </button>
+    </nav>
+  </main>
+
+  <!-- ==================== APP LOGIC SCRIPT ==================== -->
+  <script>
+    lucide.createIcons();
+
+    let currentTone = 'Friendly';
+    let currentAngle = 'VALUE';
+
+    const angleTexts = {
+      VALUE: "Hi Marcus, I completely understand focusing on total return. With our Enterprise Sales Suite, the objective is to eliminate lead drop-off so the platform pays for itself within the first 3 weeks. Would it help if we walked through the exact revenue breakdown together so you can present the numbers directly to your CFO?",
+      PERSUASIVE: "Hi Marcus, making the right call comes down to what best supports your pipeline right now. If closing more sales is a current Q3 priority, waiting means another month of lost leads. Let's make sure you have all the facts—would you like to review the step-by-step rollout today?",
+      FRIENDLY: "Hi Marcus! Totally understand where you're coming from. No pressure at all—I just want to ensure you have everything you need to see if this fits your current goals. Whenever you're ready, let me know if you'd like me to address any remaining questions!"
+    };
+
+    function switchTab(tabId) {
+      const views = ['dashboard', 'ai', 'close-the-sale', 'leads', 'customers', 'follow-ups', 'products', 'ad-creator', 'analytics', 'settings'];
+      views.forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) el.classList.add('hidden');
+        const navEl = document.getElementById('nav-' + v);
+        if (navEl) {
+          navEl.classList.remove('nav-active');
+          navEl.classList.remove('text-blue-400');
+        }
+      });
+
+      const activeView = document.getElementById('view-' + tabId);
+      if (activeView) activeView.classList.remove('hidden');
+
+      const activeNav = document.getElementById('nav-' + tabId);
+      if (activeNav) {
+        activeNav.classList.add('nav-active');
+        activeNav.classList.add('text-blue-400');
+      }
+      lucide.createIcons();
+    }
+
+    function changeTimeframe(tf) {
+      ['Today', '7 Days', '30 Days'].forEach(t => {
+        const btn = document.getElementById('tf-' + t);
+        if (btn) {
+          btn.className = t === tf ? 'px-3 py-1 rounded-lg bg-blue-600 text-white font-bold transition' : 'px-3 py-1 rounded-lg text-slate-400 hover:text-white transition';
+        }
+      });
+      if (tf === 'Today') {
+        document.getElementById('kpi-revenue').innerText = '$1,240.00';
+        document.getElementById('kpi-orders').innerText = '4';
+        document.getElementById('kpi-leads').innerText = '9';
+      } else if (tf === '7 Days') {
+        document.getElementById('kpi-revenue').innerText = '$9,480.00';
+        document.getElementById('kpi-orders').innerText = '31';
+        document.getElementById('kpi-leads').innerText = '64';
+      } else {
+        document.getElementById('kpi-revenue').innerText = '$38,450.00';
+        document.getElementById('kpi-orders').innerText = '128';
+        document.getElementById('kpi-leads').innerText = '242';
+      }
+    }
+
+    function setAiTone(tone) {
+      currentTone = tone;
+      ['Friendly', 'Professional', 'Persuasive', 'Short'].forEach(t => {
+        const b = document.getElementById('tone-' + t);
+        if (b) {
+          b.className = t === tone ? 'p-2.5 rounded-xl border bg-blue-600/20 border-blue-500 text-blue-300 font-bold transition' : 'p-2.5 rounded-xl border bg-[#111827] border-slate-800 text-slate-400 transition';
+        }
+      });
+    }
+
+    function insertSample(text) {
+      document.getElementById('ai-input').value = text;
+    }
+
+    function generateAIReply() {
+      const input = document.getElementById('ai-input').value;
+      if (!input.trim()) {
+        alert('Please enter a customer message first.');
+        return;
+      }
+      const outputCard = document.getElementById('ai-output-card');
+      const outputText = document.getElementById('ai-output-text');
+      outputCard.classList.remove('hidden');
+
+      if (currentTone === 'Friendly') {
+        outputText.innerText = "Hi there! Thanks so much for reaching out about this. Orders typically ship within 2-3 business days and we are here to support you every step of the way. Would you like me to process this for you today?";
+      } else if (currentTone === 'Professional') {
+        outputText.innerText = "Thank you for contacting us regarding your inquiry. All orders are processed in accordance with our standard delivery schedules. Please let us know how you would like to proceed and we will gladly assist you.";
+      } else if (currentTone === 'Persuasive') {
+        outputText.innerText = "Thanks for checking this out. This offering is specifically engineered to eliminate hassle and provide tangible results from day one. Would you like to reserve yours now so we can prioritize your order?";
+      } else {
+        outputText.innerText = "Hi! Thanks for checking in. We are ready to assist whenever you'd like to get started today!";
+      }
+      lucide.createIcons();
+    }
+
+    function loadCloseSalePreload(client, prod, conv, val) {
+      switchTab('close-the-sale');
+      document.getElementById('cts-client').value = client;
+      document.getElementById('cts-prod').value = prod;
+      document.getElementById('cts-val').value = val;
+      document.getElementById('cts-input').value = conv;
+      runCloseTheSale();
+    }
+
+    function runCloseTheSale() {
+      const conv = document.getElementById('cts-input').value;
+      if (!conv.trim()) {
+        alert('Please paste a sales conversation to analyze.');
+        return;
+      }
+      document.getElementById('cts-output').classList.remove('hidden');
+      switchAngle('VALUE');
+    }
+
+    function switchAngle(angle) {
+      currentAngle = angle;
+      ['VALUE', 'PERSUASIVE', 'FRIENDLY'].forEach(a => {
+        const b = document.getElementById('angle-' + a);
+        if (b) {
+          b.className = a === angle ? 'p-2.5 rounded-xl border bg-blue-600/20 border-blue-500 text-blue-300 font-bold text-xs' : 'p-2.5 rounded-xl border bg-[#0A0F1E] border-slate-800 text-slate-400 text-xs';
+        }
+      });
+      document.getElementById('cts-angle-text').innerText = angleTexts[angle];
+    }
+
+    function preloadAd(name, price, usp) {
+      switchTab('ad-creator');
+      document.getElementById('ad-name').value = name;
+      document.getElementById('ad-usp').value = usp;
+      runAdCreator();
+    }
+
+    function runAdCreator() {
+      const name = document.getElementById('ad-name').value;
+      const usp = document.getElementById('ad-usp').value;
+      document.getElementById('ad-head').innerText = "Upgrade Your Setup: " + name;
+      document.getElementById('ad-copy').innerText = "Engineered specifically for sellers who demand results. Featuring " + usp + ". Backed by dedicated US customer support.";
+      document.getElementById('ad-tiktok').innerText = "[0:00 - 0:03] VISUAL: Quick demo of " + name + " solving the primary bottleneck.\nAUDIO: \"If you're still doing this the old way, look at this.\"";
+    }
+
+    function copyText(elId) {
+      const text = document.getElementById(elId).innerText;
+      navigator.clipboard.writeText(text);
+      alert('Copied to clipboard!');
+    }
+
+    function saveTemplate() {
+      alert('Saved to your response templates library!');
+    }
+  </script>
+</body>
+</html>
